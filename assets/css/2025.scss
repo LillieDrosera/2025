@@ -497,3 +497,12 @@ main {
     }
   }
 }
+@media screen and (max-width: 460px) {
+  html,
+  body, main {
+    height: 100%;
+  }
+  #cursor {
+    display: none;
+  }
+}
