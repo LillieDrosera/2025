@@ -107,6 +107,7 @@ main {
       position: relative;
       z-index: 3;
       transition: .75s;
+      line-height: 3.3em;
     }
 
     .section__info {
@@ -464,18 +465,22 @@ main {
 }
 
 
-@media screen and (max-width: 640px) {
-  .section .section-inner .section-content {
-    max-width: initial;
-  }
-
+@media screen and (max-width: 980px) {
   .section {
     @each $animal in $aniamux {
       &[data-animal=#{$animal}] {
         --bg-img: url(../img/#{$animal}_md.jpg);
       }
     }
+  }
+}
 
+@media screen and (max-width: 640px) {
+  .section .section-inner .section-content {
+    max-width: initial;
+  }
+
+  .section {
     .section-inner {
       .section__info {
         font-size: 1.5rem;
@@ -497,6 +502,23 @@ main {
     }
   }
 }
+
+
+@media screen and (max-width: 640px) {
+  .section:not(.section_intro):not(.section_final) {
+    br {
+      display: none;
+    }
+    @each $animal in $aniamux {
+      &[data-animal=#{$animal}] {
+        --bg-img: url(../img/#{$animal}_xs.jpg);
+      }
+    }
+
+
+  }
+}
+
 @media screen and (max-width: 460px) {
   html,
   body, main {

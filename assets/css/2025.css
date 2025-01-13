@@ -123,6 +123,7 @@ main {
   position: relative;
   z-index: 3;
   transition: 0.75s;
+  line-height: 3.3em;
 }
 .section .section-inner .section__info {
   pointer-events: none;
@@ -426,10 +427,7 @@ main {
     transform: scaleY(1);
   }
 }
-@media screen and (max-width: 640px) {
-  .section .section-inner .section-content {
-    max-width: initial;
-  }
+@media screen and (max-width: 980px) {
   .section[data-animal=agneau] {
     --bg-img: url(../img/agneau_md.jpg);
   }
@@ -463,6 +461,11 @@ main {
   .section[data-animal=marmotte] {
     --bg-img: url(../img/marmotte_md.jpg);
   }
+}
+@media screen and (max-width: 640px) {
+  .section .section-inner .section-content {
+    max-width: initial;
+  }
   .section .section-inner .section__info {
     font-size: 1.5rem;
   }
@@ -474,6 +477,44 @@ main {
   }
   .section.section_final .section-inner .section__title h1 {
     font-size: 1em;
+  }
+}
+@media screen and (max-width: 640px) {
+  .section:not(.section_intro):not(.section_final) br {
+    display: none;
+  }
+  .section:not(.section_intro):not(.section_final)[data-animal=agneau] {
+    --bg-img: url(../img/agneau_xs.jpg);
+  }
+  .section:not(.section_intro):not(.section_final)[data-animal=baleine] {
+    --bg-img: url(../img/baleine_xs.jpg);
+  }
+  .section:not(.section_intro):not(.section_final)[data-animal=chat] {
+    --bg-img: url(../img/chat_xs.jpg);
+  }
+  .section:not(.section_intro):not(.section_final)[data-animal=cochon] {
+    --bg-img: url(../img/cochon_xs.jpg);
+  }
+  .section:not(.section_intro):not(.section_final)[data-animal=chien] {
+    --bg-img: url(../img/chien_xs.jpg);
+  }
+  .section:not(.section_intro):not(.section_final)[data-animal=renard] {
+    --bg-img: url(../img/renard_xs.jpg);
+  }
+  .section:not(.section_intro):not(.section_final)[data-animal=mule] {
+    --bg-img: url(../img/mule_xs.jpg);
+  }
+  .section:not(.section_intro):not(.section_final)[data-animal=loup] {
+    --bg-img: url(../img/loup_xs.jpg);
+  }
+  .section:not(.section_intro):not(.section_final)[data-animal=poule] {
+    --bg-img: url(../img/poule_xs.jpg);
+  }
+  .section:not(.section_intro):not(.section_final)[data-animal=lynx] {
+    --bg-img: url(../img/lynx_xs.jpg);
+  }
+  .section:not(.section_intro):not(.section_final)[data-animal=marmotte] {
+    --bg-img: url(../img/marmotte_xs.jpg);
   }
 }
 @media screen and (max-width: 460px) {
