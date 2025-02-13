@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Righteous&family=Syne+Mono&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+          rel="stylesheet">
+    <style>
+        html{
+            --width: 4.5rem;
+            --border-radius: 0.5rem;
+
+            --piece-color: #8f6345;
+            --piece-border: 1px solid var(--piece-color);
+            --piece-text-color: #fff;
+
+            --case-color: #f0f0f0;
+            --case-border: 1px solid #afafaf;
+
+            margin: 0;
+            padding: 0;
+            font-size: 15px;
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(180deg, #eca0a0, #d382e0) no-repeat center center fixed;
+        }
+
+        .top, .bottom {
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            -webkit-border-radius: 3rem;
+            -moz-border-radius: 3rem;
+            border-radius: 3rem;
+
+            background: #fff;
+        }
+
+        #lettre_container,
+        #case_container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2rem;
+            gap: 1rem;
+            margin-bottom: 5rem;
+            margin: auto;
+        }
+
+
+        .case {
+            width: var(--width);
+            height: var(--width);
+            /*background-color: #f0f0f0;*/
+            /*border: 1px solid #000;*/
+            display: inline-block;
+            vertical-align: top;
+            position: relative;
+            -webkit-border-radius: var(--border-radius);
+            -moz-border-radius: var(--border-radius);
+            border-radius: var(--border-radius);
+            box-sizing: border-box;
+        }
+
+        .lettre {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: var(--width);
+            height: var(--width);
+            vertical-align: top;
+            -webkit-border-radius: var(--border-radius);
+            -moz-border-radius: var(--border-radius);
+            border-radius: var(--border-radius);
+            box-sizing: border-box;
+        }
+
+        .case:empty,
+        .lettre:empty  {
+            /*content: "";*/
+            /*width: 100%;*/
+            /*height: 100%;*/
+            /*position: absolute;*/
+            /*top: 0;*/
+            /*left: 0;*/
+            background-color: var(--case-color);
+            border: var(--case-border);
+        }
+
+        .piece {
+            font-family: "Ubuntu Mono", serif;
+            font-weight: 800;
+            font-size: 2rem;
+            width: var(--width);
+            height: var(--width);
+            background-color: var(--piece-color);
+            border: var(--piece-border);
+            color: var(--piece-text-color);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: -1px;
+            -webkit-border-radius: var(--border-radius);
+            -moz-border-radius: var(--border-radius);
+            border-radius: var(--border-radius);
+
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5), 0 0px 15px rgba(0, 0, 0, 0.25);
+            transition: 0.5s;
+            text-transform: uppercase;
+            cursor:pointer;
+        }
+
+        .piece.moving {
+            position: absolute;
+            transition: 0.5s;
+            box-shadow: 0 0px 0px rgba(0, 0, 0, 0.5), 0 0px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .piece:hover {
+            box-shadow: 0 0px 3px rgba(0, 0, 0, 0.5), 0 0px 15px rgba(0, 0, 0, 0.25);
+            transform: scale(1.02) rotate(2deg);
+        }
+
+        .lettre[data-nb]::before {
+            content: attr(data-nb);
+            position: absolute;
+            font-size: 0.85rem;
+            font-weight: 400;
+            bottom: -5px;
+            right: -5px;
+
+            background: #000;
+            height: 20px;
+            width: 20px;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+
+        }
+
+        .lettre .piece,
+        .case .piece {
+            position: relative;
+            /*top: -1px !important;*/
+            /*left: -1px !important;*/
+        }
+
+         button {
+             background: #ffdc00;
+             box-shadow: 0 3px 0 #ff9916;
+             color: #000;
+                font-size: 1rem;
+             width: fit-content;
+             margin: 0 auto;
+             border: 0;
+             border-radius: 0.5rem;
+             padding: 0.55rem 1rem 0.5rem;
+             cursor: pointer;
+         }
+         button.disabled {
+             background: #ccc;
+             box-shadow: 0 3px 0 #999;
+             color: #666;
+             cursor: not-allowed;
+         }
+    </style>
+</head>
+<body>
+
+
+<script>
+    class Word {
+        constructor(words) {
+            this.words = words.slice(0, 5);
+            this.cases = null;
+            this.pieces = null;
+            this.caseContainer = document.getElementById('case_container');
+            this.lettreContainer = document.getElementById('lettre_container');
+            this.solution = '';
+            this.button = '';
+            this.init();
+        }
+
+        init() {
+            this.createHtmlElements();
+
+            this.button = document.getElementById('validate');
+            this.setWord();
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('piece') && e.target.parentNode.classList.contains('lettre')) {
+                    this.addPieceToCase(e.target);
+                } else if (e.target.classList.contains('piece') && e.target.parentNode.classList.contains('case')) {
+                    this.addPieceToLetter(e.target);
+                }
+            });
+
+            document.getElementById('validate').addEventListener('click', (e) => {
+                if(e.target.classList.contains('disabled')){
+                    return;
+                }
+                this.checkWord()
+            });
+        }
+
+        createHtmlElements() {
+            const body = document.body;
+
+            const topDiv = document.createElement('div');
+            topDiv.classList.add('top');
+            body.appendChild(topDiv);
+
+            this.caseContainer = document.createElement('div');
+            this.caseContainer.id = 'case_container';
+            topDiv.appendChild(this.caseContainer);
+
+            const validateButton = document.createElement('button');
+            validateButton.classList.add('disabled');
+            validateButton.id = 'validate';
+            validateButton.textContent = 'Valider';
+            topDiv.appendChild(validateButton);
+
+            const bottomDiv = document.createElement('div');
+            bottomDiv.classList.add('bottom');
+            body.appendChild(bottomDiv);
+
+            this.lettreContainer = document.createElement('div');
+            this.lettreContainer.id = 'lettre_container';
+            bottomDiv.appendChild(this.lettreContainer);
+        }
+
+        setWord() {
+            this.button.classList.add('disabled');
+            let word = this.words[Math.floor(Math.random() * this.words.length)];
+            this.solution = word;
+            word = word.split('').sort(() => Math.random() - 0.5).join('');
+
+            word.split('').forEach((c) => {
+                let caseVide = document.createElement('div');
+                caseVide.classList.add('case', 'empty');
+                this.caseContainer.appendChild(caseVide);
+
+                let lettre = document.createElement('div');
+                lettre.classList.add('lettre');
+                lettre.innerHTML = `<div class="piece">${c}</div>`;
+                this.lettreContainer.appendChild(lettre);
+            });
+
+            this.cases = document.querySelectorAll('.case');
+            this.pieces = document.querySelectorAll('.piece');
+
+            // on retire le mot du tableau
+            this.words = this.words.filter(w => w !== this.solution);
+            console.log(this.solution, this.words);
+        }
+
+        checkWord() {
+            let mot = Array.from(this.caseContainer.children).map(c => c.textContent).join('');
+            if (mot === this.solution) {
+                alert('Bravo');
+            } else {
+                alert('Perdu');
+            }
+
+            setTimeout(() => {
+                this.caseContainer.innerHTML = '';
+                this.lettreContainer.innerHTML = '';
+                this.setWord();
+            }, 1000);
+        }
+
+        addPieceToCase(piece) {
+            let { top, left } = piece.getBoundingClientRect();
+            let clone = piece.cloneNode(true);
+            clone.classList.add('moving');
+            clone.style.top = `${top}px`;
+            clone.style.left = `${left}px`;
+            document.body.appendChild(clone);
+
+            let caseVide = Array.from(this.cases).find(c => c.classList.contains('empty'));
+            this.moveTo(clone, caseVide);
+
+            let nb = this.updateNb(piece.parentNode);
+            if (nb === 0) {
+                piece.parentNode.classList.add('empty');
+                piece.remove();
+            }
+
+
+            setTimeout(() => {
+                caseVide.appendChild(clone);
+                clone.classList.remove('moving');
+                clone.style.top = "";
+                clone.style.left = "";
+                if(this.lettreContainer.querySelectorAll('.piece').length === 0){
+                    document.getElementById('validate').classList.remove('disabled');
+                }
+            }, 550);
+        }
+
+        addPieceToLetter(piece) {
+            let { top, left } = piece.getBoundingClientRect();
+            piece.parentNode.classList.add('empty');
+            piece.classList.add('moving');
+            piece.style.top = `${top}px`;
+            piece.style.left = `${left}px`;
+            document.body.appendChild(piece);
+
+            let lettreVide = Array.from(this.lettreContainer.children).find(c => c.classList.contains('empty'));
+            this.moveTo(piece, lettreVide);
+
+            setTimeout(() => {
+                lettreVide.appendChild(piece);
+                piece.classList.remove('moving');
+                piece.style.top = "";
+                piece.style.left = "";
+
+                if(this.lettreContainer.querySelectorAll('.piece').length === this.lettreContainer.querySelectorAll('.piece[data-nb]').length){
+                    document.getElementById('validate').classList.add('disabled');
+                }
+            }, 550);
+        }
+
+        moveTo(piece, caseVide) {
+            let destination = caseVide.getBoundingClientRect();
+            piece.style.top = `${destination.top}px`;
+            piece.style.left = `${destination.left}px`;
+            caseVide.classList.remove('empty');
+        }
+
+        updateNb(lettre) {
+            let nb = lettre.getAttribute('data-nb');
+            if (nb === undefined || nb === null) {
+                nb = 1;
+            }
+
+            nb--;
+            if (nb > 0) {
+                lettre.setAttribute('data-nb', nb);
+            } else {
+                lettre.removeAttribute('data-nb');
+            }
+
+            return nb;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const words = [  'Pomme', 'Banane', 'Cerise', 'Datte', 'Sureau',
+            'Figue', 'Raisin', 'Melon', 'Poire', 'Jacquier',
+            'Kiwi', 'Citron', 'Mangue', 'Nectarine', 'Orange',
+            'Papaye', 'Coing', 'Framboise', 'Fraise', 'Tomate'];
+        // melange les mots
+        words.sort(() => Math.random() - 0.5);
+        new Word(words);
+    });
+</script>
+</body>
+</html>
